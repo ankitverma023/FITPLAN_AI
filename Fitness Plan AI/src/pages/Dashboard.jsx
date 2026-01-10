@@ -6,14 +6,40 @@ const Dashboard = () => {
   const { user, fitnessData } = useUser();
 
   if (!user || !fitnessData) {
-    return <div>Loading...</div>;
+    return (
+      <div style={{ 
+        minHeight: '100vh', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        backgroundColor: '#f9fafb'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <h2>Loading your dashboard...</h2>
+          <p>Please wait while we prepare your fitness data.</p>
+        </div>
+      </div>
+    );
   }
 
-  const currentWeek = 1; // In a real app, this would be calculated based on start date
-  const currentDay = new Date().getDay() || 7; // 1-7, Sunday = 7
+  const currentWeek = 1;
+  const currentDay = new Date().getDay() || 7;
 
-  const todaysWorkout = fitnessData.workoutPlan[`week${currentWeek}`][`day${currentDay}`];
-  const thisWeeksDiet = fitnessData.dietPlan[`week${currentWeek}`];
+  // Safely access workout and diet data with fallbacks
+  const todaysWorkout = fitnessData.workoutPlan?.[`week${currentWeek}`]?.[`day${currentDay}`] || {
+    type: 'rest',
+    title: 'Rest Day',
+    description: 'Recovery and light stretching'
+  };
+
+  const thisWeeksDiet = fitnessData.dietPlan?.[`week${currentWeek}`] || {};
+  const todaysDiet = thisWeeksDiet[`day${currentDay}`] || {
+    meals: {
+      breakfast: { name: 'Healthy Breakfast' },
+      lunch: { name: 'Nutritious Lunch' },
+      dinner: { name: 'Balanced Dinner' }
+    }
+  };
 
   // Calculate BMI position on scale (0-100%)
   const getBMIPosition = (bmi) => {
@@ -88,7 +114,7 @@ const Dashboard = () => {
           
           <div className="card" style={{ textAlign: 'center' }}>
             <h3 style={{ color: 'var(--fitness-green)', fontSize: '2rem' }}>
-              {user.fitnessGoal.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+              {user.fitnessGoal ? user.fitnessGoal.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'General Fitness'}
             </h3>
             <p style={{ color: 'var(--text-gray)' }}>Your Goal</p>
           </div>
@@ -171,7 +197,7 @@ const Dashboard = () => {
                   {todaysWorkout.title}
                 </p>
                 <p style={{ color: 'var(--text-gray)', marginBottom: '1rem' }}>
-                  Phase: {todaysWorkout.phase}
+                  Phase: {todaysWorkout.phase || 'Foundation'}
                 </p>
                 <Link 
                   to={`/plan/workout/${currentWeek}/${currentDay}`}
@@ -188,22 +214,20 @@ const Dashboard = () => {
             <h3 style={{ marginBottom: '1rem', color: 'var(--energy-orange)' }}>
               🍽️ Today's Meals
             </h3>
-            {thisWeeksDiet[`day${currentDay}`] && (
-              <div>
-                <div style={{ marginBottom: '1rem' }}>
-                  <p><strong>Breakfast:</strong> {thisWeeksDiet[`day${currentDay}`].meals.breakfast.name}</p>
-                  <p><strong>Lunch:</strong> {thisWeeksDiet[`day${currentDay}`].meals.lunch.name}</p>
-                  <p><strong>Dinner:</strong> {thisWeeksDiet[`day${currentDay}`].meals.dinner.name}</p>
-                </div>
-                <Link 
-                  to={`/plan/diet/${currentWeek}`}
-                  className="btn btn-secondary"
-                  style={{ textDecoration: 'none' }}
-                >
-                  View Full Diet Plan
-                </Link>
+            <div>
+              <div style={{ marginBottom: '1rem' }}>
+                <p><strong>Breakfast:</strong> {todaysDiet.meals.breakfast.name}</p>
+                <p><strong>Lunch:</strong> {todaysDiet.meals.lunch.name}</p>
+                <p><strong>Dinner:</strong> {todaysDiet.meals.dinner.name}</p>
               </div>
-            )}
+              <Link 
+                to={`/plan/diet/${currentWeek}`}
+                className="btn btn-secondary"
+                style={{ textDecoration: 'none' }}
+              >
+                View Full Diet Plan
+              </Link>
+            </div>
           </div>
         </div>
 

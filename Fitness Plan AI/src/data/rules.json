@@ -52,26 +52,59 @@
     }
   },
   "healthConditions": {
+    "none": {
+      "name": "None",
+      "workoutRestrictions": [],
+      "workoutAlternatives": [],
+      "dietRules": [],
+      "priority": 0
+    },
     "knee_pain": {
-      "restrictions": ["jumping", "high_impact"],
-      "alternatives": ["swimming", "cycling", "upper_body"]
+      "name": "Knee Pain",
+      "workoutRestrictions": ["jumping", "high_impact"],
+      "workoutAlternatives": ["swimming", "cycling", "upper_body"],
+      "dietRules": ["anti_inflammatory", "omega3_rich", "reduce_processed"],
+      "avoidFoods": ["processed_meats", "fried_foods", "refined_sugar"],
+      "preferFoods": ["fatty_fish", "leafy_greens", "berries", "nuts"],
+      "priority": 2
     },
     "back_pain": {
-      "restrictions": ["heavy_deadlifts", "overhead_press"],
-      "alternatives": ["supported_exercises", "core_strengthening"]
+      "name": "Back Pain", 
+      "workoutRestrictions": ["heavy_deadlifts", "overhead_press"],
+      "workoutAlternatives": ["supported_exercises", "core_strengthening"],
+      "dietRules": ["anti_inflammatory", "calcium_rich", "magnesium_rich"],
+      "avoidFoods": ["processed_foods", "excess_caffeine", "alcohol"],
+      "preferFoods": ["dairy_products", "dark_leafy_greens", "almonds", "salmon"],
+      "priority": 2
     },
     "heart_condition": {
-      "restrictions": ["high_intensity", "max_heart_rate"],
-      "alternatives": ["low_intensity_cardio", "walking"]
+      "name": "Heart Condition",
+      "workoutRestrictions": ["high_intensity", "max_heart_rate"],
+      "workoutAlternatives": ["low_intensity_cardio", "walking"],
+      "dietRules": ["low_sodium", "low_saturated_fat", "high_fiber", "potassium_rich"],
+      "avoidFoods": ["high_sodium", "saturated_fats", "trans_fats", "processed_meats"],
+      "preferFoods": ["whole_grains", "fruits", "vegetables", "lean_proteins"],
+      "macroAdjustments": { "sodium": "max_1500mg", "saturatedFat": "max_7%" },
+      "priority": 3
     },
     "diabetes": {
-      "restrictions": [],
-      "alternatives": [],
-      "dietModifications": ["low_sugar", "complex_carbs"]
+      "name": "Diabetes",
+      "workoutRestrictions": [],
+      "workoutAlternatives": [],
+      "dietRules": ["low_glycemic", "controlled_carbs", "high_fiber", "no_added_sugar"],
+      "avoidFoods": ["refined_sugar", "white_bread", "sugary_drinks", "processed_snacks"],
+      "preferFoods": ["complex_carbs", "lean_proteins", "non_starchy_vegetables", "legumes"],
+      "macroAdjustments": { "carbs": "max_45%", "fiber": "min_25g", "sugar": "max_25g" },
+      "priority": 3
     },
     "asthma": {
-      "restrictions": ["prolonged_cardio"],
-      "alternatives": ["interval_training", "strength_focus"]
+      "name": "Asthma",
+      "workoutRestrictions": ["prolonged_cardio"],
+      "workoutAlternatives": ["interval_training", "strength_focus"],
+      "dietRules": ["anti_inflammatory", "antioxidant_rich", "avoid_triggers"],
+      "avoidFoods": ["sulfites", "processed_foods", "dairy_excess", "food_additives"],
+      "preferFoods": ["vitamin_c_rich", "magnesium_rich", "omega3_sources", "antioxidant_foods"],
+      "priority": 2
     }
   },
   "weeklyProgression": {
@@ -88,5 +121,121 @@
       "other": { "formula": "(10 * weight) + (6.25 * height) - (5 * age) - 78" }
     },
     "activityMultiplier": 1.6
+  },
+  "dietaryRestrictions": {
+    "none": {
+      "name": "No Restrictions",
+      "avoidFoods": [],
+      "replaceWith": {},
+      "macroAdjustments": {}
+    },
+    "vegetarian": {
+      "name": "Vegetarian",
+      "avoidFoods": ["meat", "fish", "poultry", "seafood"],
+      "replaceWith": {
+        "chicken": "paneer",
+        "fish": "tofu",
+        "beef": "legumes",
+        "turkey": "tempeh"
+      },
+      "macroAdjustments": { "protein": "increase_plant_based" }
+    },
+    "vegan": {
+      "name": "Vegan", 
+      "avoidFoods": ["meat", "fish", "poultry", "seafood", "dairy", "eggs", "honey"],
+      "replaceWith": {
+        "chicken": "tofu",
+        "fish": "tempeh",
+        "beef": "legumes",
+        "dairy": "plant_milk",
+        "eggs": "flax_eggs",
+        "yogurt": "coconut_yogurt"
+      },
+      "macroAdjustments": { "protein": "increase_plant_based", "b12": "supplement_needed" }
+    },
+    "eggitarian": {
+      "name": "Eggitarian",
+      "avoidFoods": ["meat", "fish", "poultry", "seafood"],
+      "replaceWith": {
+        "chicken": "eggs",
+        "fish": "egg_dishes",
+        "beef": "egg_protein"
+      },
+      "macroAdjustments": { "protein": "egg_focused" }
+    },
+    "lactose_intolerant": {
+      "name": "Lactose Intolerant",
+      "avoidFoods": ["milk", "cheese", "yogurt", "butter", "cream"],
+      "replaceWith": {
+        "milk": "almond_milk",
+        "cheese": "nutritional_yeast",
+        "yogurt": "coconut_yogurt",
+        "butter": "olive_oil"
+      },
+      "macroAdjustments": { "calcium": "non_dairy_sources" }
+    },
+    "gluten_free": {
+      "name": "Gluten Free",
+      "avoidFoods": ["wheat", "barley", "rye", "bread", "pasta", "cereals"],
+      "replaceWith": {
+        "bread": "gluten_free_bread",
+        "pasta": "rice_pasta",
+        "flour": "almond_flour",
+        "oats": "certified_gf_oats"
+      },
+      "macroAdjustments": { "fiber": "alternative_sources" }
+    }
+  },
+  "cuisineTypes": {
+    "indian": {
+      "name": "Indian",
+      "characteristics": ["spices", "curry", "rice", "lentils", "vegetables"],
+      "cookingMethods": ["curry", "tandoor", "steamed", "sauteed"],
+      "staples": ["rice", "roti", "dal", "vegetables", "spices"]
+    },
+    "continental": {
+      "name": "Continental", 
+      "characteristics": ["grilled", "baked", "fresh", "herbs", "balanced"],
+      "cookingMethods": ["grilled", "baked", "steamed", "sauteed"],
+      "staples": ["bread", "pasta", "salads", "proteins", "vegetables"]
+    },
+    "mediterranean": {
+      "name": "Mediterranean",
+      "characteristics": ["olive_oil", "fish", "vegetables", "herbs", "grains"],
+      "cookingMethods": ["grilled", "roasted", "fresh", "olive_oil_based"],
+      "staples": ["olive_oil", "fish", "vegetables", "grains", "legumes"]
+    },
+    "asian": {
+      "name": "Asian",
+      "characteristics": ["stir_fry", "rice", "noodles", "vegetables", "light"],
+      "cookingMethods": ["stir_fry", "steamed", "boiled", "grilled"],
+      "staples": ["rice", "noodles", "vegetables", "tofu", "fish"]
+    },
+    "keto": {
+      "name": "Keto-style",
+      "characteristics": ["high_fat", "low_carb", "moderate_protein"],
+      "cookingMethods": ["grilled", "baked", "sauteed_in_fat"],
+      "staples": ["meat", "fish", "eggs", "cheese", "low_carb_vegetables"],
+      "macroTargets": { "carbs": "max_5%", "fat": "70-80%", "protein": "20-25%" }
+    },
+    "vegan": {
+      "name": "Vegan",
+      "characteristics": ["plant_based", "legumes", "grains", "vegetables", "fruits"],
+      "cookingMethods": ["steamed", "roasted", "raw", "sauteed"],
+      "staples": ["legumes", "grains", "vegetables", "fruits", "nuts", "seeds"]
+    }
+  },
+  "conflictResolution": {
+    "priority": [
+      "health_condition_safety",
+      "dietary_restrictions", 
+      "fitness_goals",
+      "cuisine_preferences"
+    ],
+    "rules": {
+      "health_overrides_cuisine": true,
+      "restrictions_override_preferences": true,
+      "safety_first": true
+    }
   }
 }

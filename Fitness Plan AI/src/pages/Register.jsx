@@ -13,9 +13,9 @@ const Register = () => {
     weight: '',
     fitnessGoal: '',
     fitnessLevel: '',
-    healthProblems: [],
+    healthProblems: ['none'], // Default to 'none'
     preferredCuisines: [],
-    dietaryRestrictions: []
+    dietaryRestrictions: ['none'] // Default to 'none'
   });
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -29,12 +29,38 @@ const Register = () => {
   };
 
   const handleMultiSelect = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: prev[field].includes(value)
-        ? prev[field].filter(item => item !== value)
-        : [...prev[field], value]
-    }));
+    setFormData(prev => {
+      if (field === 'healthProblems') {
+        // Handle health conditions with "None" logic
+        if (value === 'none') {
+          // If "None" is selected, clear all other selections
+          return { ...prev, [field]: ['none'] };
+        } else {
+          // If any condition is selected, remove "None" and toggle the condition
+          const currentValues = prev[field].filter(item => item !== 'none');
+          return {
+            ...prev,
+            [field]: currentValues.includes(value)
+              ? currentValues.filter(item => item !== value)
+              : [...currentValues, value]
+          };
+        }
+      } else if (field === 'preferredCuisines') {
+        // Single select for cuisine (change to single select)
+        return { ...prev, [field]: [value] };
+      } else if (field === 'dietaryRestrictions') {
+        // Single select for dietary restrictions
+        return { ...prev, [field]: [value] };
+      } else {
+        // Default multi-select behavior
+        return {
+          ...prev,
+          [field]: prev[field].includes(value)
+            ? prev[field].filter(item => item !== value)
+            : [...prev[field], value]
+        };
+      }
+    });
   };
 
   const handleSubmit = (e) => {
@@ -64,7 +90,7 @@ const Register = () => {
       case 3:
         return true; // Health problems are optional
       case 4:
-        return formData.preferredCuisines.length > 0;
+        return true; // Final step - always valid
       default:
         return false;
     }
@@ -227,50 +253,24 @@ const Register = () => {
 
               {currentStep === 4 && (
                 <div>
-                  <h3 style={{ marginBottom: '1.5rem' }}>Dietary Preferences</h3>
+                  <h3 style={{ marginBottom: '1.5rem' }}>Almost Done!</h3>
                   
-                  <div className="form-group">
-                    <label className="form-label">Preferred Meal Cuisines</label>
-                    <div className="checkbox-group">
-                      {[
-                        { key: 'indian', label: 'Indian' },
-                        { key: 'continental', label: 'Continental' },
-                        { key: 'mediterranean', label: 'Mediterranean' },
-                        { key: 'asian', label: 'Asian' },
-                        { key: 'keto', label: 'Keto-style' },
-                        { key: 'vegan', label: 'Vegan' }
-                      ].map(cuisine => (
-                        <div
-                          key={cuisine.key}
-                          className={`checkbox-item ${formData.preferredCuisines.includes(cuisine.key) ? 'selected' : ''}`}
-                          onClick={() => handleMultiSelect('preferredCuisines', cuisine.key)}
-                        >
-                          <span>{cuisine.label}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">Dietary Restrictions</label>
-                    <div className="checkbox-group">
-                      {[
-                        { key: 'none', label: 'No Restrictions' },
-                        { key: 'vegetarian', label: 'Vegetarian' },
-                        { key: 'vegan', label: 'Vegan' },
-                        { key: 'eggitarian', label: 'Eggitarian' },
-                        { key: 'lactose_intolerant', label: 'Lactose Intolerant' },
-                        { key: 'gluten_free', label: 'Gluten Free' }
-                      ].map(restriction => (
-                        <div
-                          key={restriction.key}
-                          className={`checkbox-item ${formData.dietaryRestrictions.includes(restriction.key) ? 'selected' : ''}`}
-                          onClick={() => handleMultiSelect('dietaryRestrictions', restriction.key)}
-                        >
-                          <span>{restriction.label}</span>
-                        </div>
-                      ))}
-                    </div>
+                  <div style={{ 
+                    padding: '1.5rem', 
+                    backgroundColor: '#f0f9ff', 
+                    borderRadius: '0.5rem', 
+                    border: '1px solid #bae6fd',
+                    textAlign: 'center'
+                  }}>
+                    <h4 style={{ color: 'var(--energy-orange)', marginBottom: '1rem' }}>
+                      🎯 Your Personalized Plan is Ready!
+                    </h4>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--text-gray)', marginBottom: '1rem' }}>
+                      Based on your fitness goal: <strong>{formData.fitnessGoal?.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</strong>
+                    </p>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--text-gray)' }}>
+                      We'll create a customized diet plan with meals specifically designed to help you achieve your goals.
+                    </p>
                   </div>
                 </div>
               )}

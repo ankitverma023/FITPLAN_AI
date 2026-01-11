@@ -1,83 +1,176 @@
 {
-  "mealTemplates": {
-    "indian": {
-      "breakfast": [
-        { "name": "Oats Upma", "calories": 250, "protein": 8, "carbs": 45, "fat": 5 },
-        { "name": "Poha with Vegetables", "calories": 200, "protein": 6, "carbs": 35, "fat": 4 },
-        { "name": "Idli Sambar", "calories": 180, "protein": 7, "carbs": 32, "fat": 3 }
-      ],
-      "lunch": [
-        { "name": "Dal Rice with Vegetables", "calories": 400, "protein": 15, "carbs": 65, "fat": 8 },
-        { "name": "Chicken Curry with Roti", "calories": 450, "protein": 25, "carbs": 40, "fat": 18 },
-        { "name": "Rajma Rice", "calories": 380, "protein": 18, "carbs": 55, "fat": 10 }
-      ],
-      "snack": [
-        { "name": "Mixed Nuts", "calories": 150, "protein": 6, "carbs": 8, "fat": 12 },
-        { "name": "Fruit Chaat", "calories": 120, "protein": 2, "carbs": 28, "fat": 1 },
-        { "name": "Roasted Chana", "calories": 100, "protein": 8, "carbs": 15, "fat": 2 }
-      ],
-      "dinner": [
-        { "name": "Grilled Fish with Vegetables", "calories": 350, "protein": 30, "carbs": 20, "fat": 15 },
-        { "name": "Paneer Sabzi with Roti", "calories": 400, "protein": 20, "carbs": 35, "fat": 20 },
-        { "name": "Vegetable Khichdi", "calories": 280, "protein": 12, "carbs": 45, "fat": 6 }
-      ]
+  "dietPlans": {
+    "weight_loss": {
+      "name": "Weight Loss Diet Plan",
+      "description": "Low-calorie, high-protein meals to support fat burning",
+      "calorieTarget": "deficit",
+      "macroRatio": { "protein": 35, "carbs": 30, "fat": 35 },
+      "meals": {
+        "breakfast": [
+          { "name": "Greek Yogurt with Berries", "calories": 200, "protein": 15, "carbs": 20, "fat": 8 },
+          { "name": "Vegetable Omelet", "calories": 220, "protein": 18, "carbs": 8, "fat": 14 },
+          { "name": "Protein Smoothie Bowl", "calories": 180, "protein": 20, "carbs": 15, "fat": 6 }
+        ],
+        "lunch": [
+          { "name": "Grilled Chicken Salad", "calories": 350, "protein": 35, "carbs": 15, "fat": 18 },
+          { "name": "Tuna and Avocado Bowl", "calories": 320, "protein": 28, "carbs": 12, "fat": 20 },
+          { "name": "Turkey Lettuce Wraps", "calories": 280, "protein": 25, "carbs": 10, "fat": 16 }
+        ],
+        "snack": [
+          { "name": "Apple with Almond Butter", "calories": 150, "protein": 6, "carbs": 18, "fat": 8 },
+          { "name": "Protein Bar", "calories": 140, "protein": 12, "carbs": 15, "fat": 5 },
+          { "name": "Cottage Cheese with Cucumber", "calories": 120, "protein": 14, "carbs": 8, "fat": 4 }
+        ],
+        "dinner": [
+          { "name": "Baked Salmon with Vegetables", "calories": 380, "protein": 32, "carbs": 15, "fat": 22 },
+          { "name": "Lean Beef Stir-fry", "calories": 340, "protein": 28, "carbs": 18, "fat": 18 },
+          { "name": "Grilled Chicken with Quinoa", "calories": 360, "protein": 30, "carbs": 20, "fat": 16 }
+        ]
+      }
     },
-    "continental": {
-      "breakfast": [
-        { "name": "Scrambled Eggs with Toast", "calories": 300, "protein": 18, "carbs": 25, "fat": 15 },
-        { "name": "Greek Yogurt with Berries", "calories": 200, "protein": 15, "carbs": 20, "fat": 8 },
-        { "name": "Oatmeal with Banana", "calories": 250, "protein": 8, "carbs": 45, "fat": 5 }
-      ],
-      "lunch": [
-        { "name": "Grilled Chicken Salad", "calories": 400, "protein": 35, "carbs": 15, "fat": 22 },
-        { "name": "Quinoa Bowl", "calories": 380, "protein": 16, "carbs": 50, "fat": 12 },
-        { "name": "Turkey Sandwich", "calories": 350, "protein": 25, "carbs": 35, "fat": 12 }
-      ],
-      "snack": [
-        { "name": "Apple with Almond Butter", "calories": 180, "protein": 6, "carbs": 20, "fat": 10 },
-        { "name": "Protein Smoothie", "calories": 200, "protein": 20, "carbs": 15, "fat": 8 },
-        { "name": "Hummus with Veggies", "calories": 120, "protein": 5, "carbs": 12, "fat": 6 }
-      ],
-      "dinner": [
-        { "name": "Baked Salmon with Broccoli", "calories": 400, "protein": 35, "carbs": 15, "fat": 22 },
-        { "name": "Lean Beef with Sweet Potato", "calories": 450, "protein": 30, "carbs": 35, "fat": 18 },
-        { "name": "Vegetable Stir-fry with Tofu", "calories": 320, "protein": 18, "carbs": 25, "fat": 16 }
-      ]
+    "muscle_gain": {
+      "name": "Muscle Gain Diet Plan",
+      "description": "High-protein, calorie-dense meals to support muscle growth",
+      "calorieTarget": "surplus",
+      "macroRatio": { "protein": 30, "carbs": 40, "fat": 30 },
+      "meals": {
+        "breakfast": [
+          { "name": "Protein Pancakes with Banana", "calories": 420, "protein": 25, "carbs": 45, "fat": 15 },
+          { "name": "Scrambled Eggs with Toast", "calories": 380, "protein": 22, "carbs": 35, "fat": 18 },
+          { "name": "Oatmeal with Protein Powder", "calories": 400, "protein": 28, "carbs": 40, "fat": 12 }
+        ],
+        "lunch": [
+          { "name": "Chicken and Rice Bowl", "calories": 550, "protein": 40, "carbs": 55, "fat": 18 },
+          { "name": "Beef and Sweet Potato", "calories": 520, "protein": 35, "carbs": 50, "fat": 20 },
+          { "name": "Salmon with Quinoa", "calories": 500, "protein": 38, "carbs": 45, "fat": 22 }
+        ],
+        "snack": [
+          { "name": "Protein Shake with Banana", "calories": 280, "protein": 25, "carbs": 30, "fat": 8 },
+          { "name": "Trail Mix", "calories": 250, "protein": 8, "carbs": 25, "fat": 16 },
+          { "name": "Greek Yogurt with Granola", "calories": 300, "protein": 18, "carbs": 35, "fat": 12 }
+        ],
+        "dinner": [
+          { "name": "Grilled Steak with Rice", "calories": 600, "protein": 45, "carbs": 50, "fat": 25 },
+          { "name": "Chicken Pasta", "calories": 580, "protein": 40, "carbs": 55, "fat": 22 },
+          { "name": "Fish with Mashed Potatoes", "calories": 560, "protein": 42, "carbs": 48, "fat": 20 }
+        ]
+      }
+    },
+    "fat_loss_toning": {
+      "name": "Fat Loss + Toning Diet Plan",
+      "description": "Balanced nutrition to lose fat while maintaining muscle",
+      "calorieTarget": "moderate_deficit",
+      "macroRatio": { "protein": 35, "carbs": 35, "fat": 30 },
+      "meals": {
+        "breakfast": [
+          { "name": "Avocado Toast with Eggs", "calories": 320, "protein": 18, "carbs": 25, "fat": 18 },
+          { "name": "Protein Smoothie", "calories": 280, "protein": 22, "carbs": 28, "fat": 10 },
+          { "name": "Greek Yogurt Parfait", "calories": 300, "protein": 20, "carbs": 30, "fat": 12 }
+        ],
+        "lunch": [
+          { "name": "Quinoa Power Bowl", "calories": 420, "protein": 25, "carbs": 45, "fat": 16 },
+          { "name": "Grilled Chicken Wrap", "calories": 380, "protein": 28, "carbs": 35, "fat": 15 },
+          { "name": "Salmon Salad", "calories": 400, "protein": 30, "carbs": 25, "fat": 22 }
+        ],
+        "snack": [
+          { "name": "Hummus with Veggies", "calories": 160, "protein": 8, "carbs": 18, "fat": 8 },
+          { "name": "Mixed Nuts", "calories": 180, "protein": 6, "carbs": 8, "fat": 16 },
+          { "name": "Protein Yogurt", "calories": 140, "protein": 15, "carbs": 12, "fat": 6 }
+        ],
+        "dinner": [
+          { "name": "Lean Turkey with Vegetables", "calories": 420, "protein": 35, "carbs": 30, "fat": 18 },
+          { "name": "Baked Cod with Sweet Potato", "calories": 380, "protein": 32, "carbs": 35, "fat": 12 },
+          { "name": "Chicken Stir-fry", "calories": 400, "protein": 30, "carbs": 32, "fat": 16 }
+        ]
+      }
+    },
+    "general_fitness": {
+      "name": "General Fitness Diet Plan",
+      "description": "Well-balanced meals for overall health and fitness",
+      "calorieTarget": "maintenance",
+      "macroRatio": { "protein": 25, "carbs": 45, "fat": 30 },
+      "meals": {
+        "breakfast": [
+          { "name": "Oatmeal with Fruits", "calories": 350, "protein": 12, "carbs": 55, "fat": 12 },
+          { "name": "Whole Grain Toast with Avocado", "calories": 320, "protein": 10, "carbs": 40, "fat": 16 },
+          { "name": "Smoothie Bowl", "calories": 330, "protein": 15, "carbs": 50, "fat": 10 }
+        ],
+        "lunch": [
+          { "name": "Mediterranean Bowl", "calories": 450, "protein": 20, "carbs": 55, "fat": 18 },
+          { "name": "Chicken and Vegetable Soup", "calories": 380, "protein": 25, "carbs": 40, "fat": 15 },
+          { "name": "Tuna Sandwich", "calories": 420, "protein": 22, "carbs": 50, "fat": 16 }
+        ],
+        "snack": [
+          { "name": "Fruit and Nut Mix", "calories": 200, "protein": 6, "carbs": 25, "fat": 10 },
+          { "name": "Yogurt with Berries", "calories": 180, "protein": 12, "carbs": 22, "fat": 6 },
+          { "name": "Whole Grain Crackers with Cheese", "calories": 190, "protein": 8, "carbs": 20, "fat": 10 }
+        ],
+        "dinner": [
+          { "name": "Grilled Fish with Rice", "calories": 480, "protein": 30, "carbs": 50, "fat": 18 },
+          { "name": "Chicken with Pasta", "calories": 520, "protein": 28, "carbs": 60, "fat": 20 },
+          { "name": "Vegetable Curry with Bread", "calories": 450, "protein": 18, "carbs": 65, "fat": 16 }
+        ]
+      }
+    },
+    "endurance": {
+      "name": "Endurance Improvement Diet Plan",
+      "description": "Carb-focused meals to fuel endurance activities",
+      "calorieTarget": "surplus",
+      "macroRatio": { "protein": 20, "carbs": 55, "fat": 25 },
+      "meals": {
+        "breakfast": [
+          { "name": "Banana Pancakes", "calories": 420, "protein": 15, "carbs": 70, "fat": 12 },
+          { "name": "Oatmeal with Honey", "calories": 380, "protein": 12, "carbs": 65, "fat": 10 },
+          { "name": "Fruit Smoothie", "calories": 350, "protein": 10, "carbs": 60, "fat": 8 }
+        ],
+        "lunch": [
+          { "name": "Pasta with Chicken", "calories": 580, "protein": 25, "carbs": 85, "fat": 18 },
+          { "name": "Rice Bowl with Vegetables", "calories": 520, "protein": 20, "carbs": 80, "fat": 15 },
+          { "name": "Quinoa Salad", "calories": 480, "protein": 18, "carbs": 75, "fat": 14 }
+        ],
+        "snack": [
+          { "name": "Energy Balls", "calories": 220, "protein": 6, "carbs": 35, "fat": 8 },
+          { "name": "Banana with Peanut Butter", "calories": 250, "protein": 8, "carbs": 30, "fat": 12 },
+          { "name": "Granola Bar", "calories": 200, "protein": 5, "carbs": 32, "fat": 7 }
+        ],
+        "dinner": [
+          { "name": "Salmon with Rice and Vegetables", "calories": 550, "protein": 30, "carbs": 65, "fat": 20 },
+          { "name": "Chicken with Sweet Potato", "calories": 520, "protein": 28, "carbs": 60, "fat": 18 },
+          { "name": "Lean Beef with Pasta", "calories": 580, "protein": 32, "carbs": 70, "fat": 22 }
+        ]
+      }
     }
   },
-  "dietaryModifications": {
-    "vegetarian": {
-      "replace": {
-        "Chicken": "Paneer/Tofu",
-        "Fish": "Legumes",
-        "Beef": "Mushrooms"
-      }
-    },
-    "vegan": {
-      "replace": {
-        "Chicken": "Tofu",
-        "Fish": "Tempeh",
-        "Dairy": "Plant-based alternatives",
-        "Eggs": "Chickpea flour"
-      }
-    },
-    "keto": {
-      "macroRatio": { "carbs": 0.05, "protein": 0.25, "fat": 0.7 },
-      "restrictions": ["rice", "bread", "pasta", "sugar"]
-    },
-    "gluten_free": {
-      "replace": {
-        "Wheat": "Rice/Quinoa",
-        "Bread": "Gluten-free bread",
-        "Pasta": "Rice noodles"
-      }
-    }
-  },
-  "weeklyMealPlan": {
-    "week1-2": "foundation",
-    "week3-4": "progression",
-    "week5-6": "optimization",
-    "week7-8": "intensification",
-    "week9-10": "peak"
+  "nutritionTips": {
+    "weight_loss": [
+      "Focus on portion control and eat slowly",
+      "Drink water before meals to feel fuller",
+      "Choose lean proteins to maintain muscle",
+      "Avoid liquid calories and sugary drinks"
+    ],
+    "muscle_gain": [
+      "Eat protein within 30 minutes after workouts",
+      "Don't skip meals - eat every 3-4 hours",
+      "Include complex carbs for energy",
+      "Stay hydrated for optimal muscle function"
+    ],
+    "fat_loss_toning": [
+      "Balance cardio with strength training nutrition",
+      "Time your carbs around workouts",
+      "Focus on whole, unprocessed foods",
+      "Get adequate sleep for recovery"
+    ],
+    "general_fitness": [
+      "Eat a variety of colorful fruits and vegetables",
+      "Stay consistent with meal timing",
+      "Listen to your body's hunger cues",
+      "Make sustainable, long-term choices"
+    ],
+    "endurance": [
+      "Fuel up with carbs before long workouts",
+      "Replenish glycogen stores after training",
+      "Stay hydrated throughout the day",
+      "Consider electrolyte replacement during long sessions"
+    ]
   }
 }

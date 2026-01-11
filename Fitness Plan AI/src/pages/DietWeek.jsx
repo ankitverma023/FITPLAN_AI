@@ -64,14 +64,36 @@ const DietWeek = () => {
               <p>4 meals</p>
             </div>
             <div style={{ textAlign: 'center' }}>
-              <h4 style={{ color: 'var(--energy-orange)' }}>Avg Protein</h4>
-              <p>~25g per meal</p>
+              <h4 style={{ color: 'var(--energy-orange)' }}>Fitness Goal</h4>
+              <p>{fitnessData.fitnessGoal?.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'General Fitness'}</p>
             </div>
             <div style={{ textAlign: 'center' }}>
-              <h4 style={{ color: 'var(--fitness-green)' }}>Variety</h4>
-              <p>Rotating menu</p>
+              <h4 style={{ color: 'var(--fitness-green)' }}>Diet Plan</h4>
+              <p>{fitnessData.dietPlanName || 'Balanced Diet'}</p>
             </div>
           </div>
+          
+          {/* Diet Plan Description */}
+          {fitnessData.dietDescription && (
+            <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: '#f0f9ff', borderRadius: '0.5rem', border: '1px solid #bae6fd' }}>
+              <h4 style={{ color: 'var(--energy-orange)', marginBottom: '0.5rem' }}>🎯 Your Diet Plan</h4>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-gray)', margin: 0 }}>
+                {fitnessData.dietDescription}
+              </p>
+            </div>
+          )}
+
+          {/* Macro Ratio */}
+          {fitnessData.macroRatio && (
+            <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: '#f0fdf4', borderRadius: '0.5rem', border: '1px solid #bbf7d0' }}>
+              <h4 style={{ color: 'var(--fitness-green)', marginBottom: '0.5rem' }}>📊 Macro Targets</h4>
+              <div style={{ display: 'flex', gap: '1rem', fontSize: '0.875rem' }}>
+                <span>Protein: {fitnessData.macroRatio.protein}%</span>
+                <span>Carbs: {fitnessData.macroRatio.carbs}%</span>
+                <span>Fat: {fitnessData.macroRatio.fat}%</span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Daily Meal Plans */}
@@ -189,50 +211,78 @@ const DietWeek = () => {
                   textAlign: 'center'
                 }}>
                   <p style={{ fontWeight: '600' }}>
-                    Daily Total: {dayData.totalCalories} calories
+                    Daily Total: {dayData.dailyTotals?.calories || dayData.totalCalories} calories
                   </p>
                   <p style={{ fontSize: '0.875rem', color: 'var(--text-gray)' }}>
                     Target: {dayData.targetCalories} calories
                   </p>
+                  {dayData.dailyTotals && (
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-gray)', marginTop: '0.25rem' }}>
+                      Protein: {dayData.dailyTotals.protein}g • Carbs: {dayData.dailyTotals.carbs}g • Fat: {dayData.dailyTotals.fat}g
+                    </p>
+                  )}
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* Nutrition Tips */}
+        {/* Fitness Goal-Specific Nutrition Tips */}
         <div className="card" style={{ marginTop: '2rem' }}>
-          <h3 style={{ marginBottom: '1rem' }}>💡 Nutrition Tips for Week {week}</h3>
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-            gap: '1rem'
-          }}>
-            <div style={{ padding: '1rem', backgroundColor: '#f0fdf4', borderRadius: '0.5rem' }}>
-              <h4>💧 Hydration</h4>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-gray)' }}>
-                Drink at least 8-10 glasses of water daily
-              </p>
+          <h3 style={{ marginBottom: '1rem' }}>💡 Nutrition Tips for {fitnessData.fitnessGoal?.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Your Goals'}</h3>
+          
+          {fitnessData.nutritionTips && fitnessData.nutritionTips.length > 0 ? (
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+              gap: '1rem'
+            }}>
+              {fitnessData.nutritionTips.map((tip, index) => (
+                <div key={index} style={{ 
+                  padding: '1rem', 
+                  backgroundColor: index % 2 === 0 ? '#f0fdf4' : '#fff7ed', 
+                  borderRadius: '0.5rem',
+                  border: `1px solid ${index % 2 === 0 ? '#bbf7d0' : '#fed7aa'}`
+                }}>
+                  <p style={{ fontSize: '0.875rem', color: 'var(--text-gray)', margin: 0 }}>
+                    {tip}
+                  </p>
+                </div>
+              ))}
             </div>
-            <div style={{ padding: '1rem', backgroundColor: '#fff7ed', borderRadius: '0.5rem' }}>
-              <h4>⏰ Meal Timing</h4>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-gray)' }}>
-                Eat every 3-4 hours to maintain energy levels
-              </p>
+          ) : (
+            // Fallback to generic tips
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+              gap: '1rem'
+            }}>
+              <div style={{ padding: '1rem', backgroundColor: '#f0fdf4', borderRadius: '0.5rem' }}>
+                <h4>💧 Hydration</h4>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-gray)' }}>
+                  Drink at least 8-10 glasses of water daily
+                </p>
+              </div>
+              <div style={{ padding: '1rem', backgroundColor: '#fff7ed', borderRadius: '0.5rem' }}>
+                <h4>⏰ Meal Timing</h4>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-gray)' }}>
+                  Eat every 3-4 hours to maintain energy levels
+                </p>
+              </div>
+              <div style={{ padding: '1rem', backgroundColor: '#f0fdf4', borderRadius: '0.5rem' }}>
+                <h4>🥗 Portion Control</h4>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-gray)' }}>
+                  Use smaller plates and eat slowly
+                </p>
+              </div>
+              <div style={{ padding: '1rem', backgroundColor: '#fff7ed', borderRadius: '0.5rem' }}>
+                <h4>🍽️ Meal Prep</h4>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-gray)' }}>
+                  Prepare meals in advance for consistency
+                </p>
+              </div>
             </div>
-            <div style={{ padding: '1rem', backgroundColor: '#f0fdf4', borderRadius: '0.5rem' }}>
-              <h4>🥗 Portion Control</h4>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-gray)' }}>
-                Use smaller plates and eat slowly
-              </p>
-            </div>
-            <div style={{ padding: '1rem', backgroundColor: '#fff7ed', borderRadius: '0.5rem' }}>
-              <h4>🍽️ Meal Prep</h4>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-gray)' }}>
-                Prepare meals in advance for consistency
-              </p>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

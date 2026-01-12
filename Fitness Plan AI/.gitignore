@@ -21,9 +21,12 @@ __pycache__/
 *.pyc
 
 # =====================
-# ML models
+# ML / Backend (VERY IMPORTANT)
 # =====================
-model.pkl
+ml/model.pkl
+ml/.env
+ml/__pycache__/
+ml/data/
 
 # =====================
 # OS files

@@ -1,272 +1,264 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useUser } from '../context/UserContext';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useUser } from "../context/UserContext";
+import { generatePlan } from "../utils/planEngine";
+
+import CaloriesChart from "../components/charts/CaloriesChart";
+import BMIChart from "../components/charts/BMIChart";
+import ProgressChart from "../components/charts/ProgressChart";
+
+import { getAIPlan } from "../services/geminiApi";
+import { predictCalories } from "../services/mlApi";
 
 const Dashboard = () => {
   const { user, fitnessData } = useUser();
 
+  /* ================= STATES ================= */
+  const [aiTextPlan, setAiTextPlan] = useState("AI plan will appear here.");
+  const [loadingAI, setLoadingAI] = useState(false);
+  const [mlCalories, setMlCalories] = useState(null);
+
+  /* ================= ML CALORIES ================= */
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchMLCalories = async () => {
+      try {
+        const calories = await predictCalories({
+          age: Number(user.age || 22),
+          gender: user.sex === "male" ? 1 : 0,
+          height_cm: Number(user.height || 170),
+          weight_kg: Number(user.weight || 65),
+          activity_level: 2,
+          goal: 1
+        });
+        setMlCalories(calories);
+      } catch {
+        setMlCalories(null);
+      }
+    };
+
+    fetchMLCalories();
+  }, [user]);
+
+  /* ================= GEMINI AI ================= */
+  useEffect(() => {
+    if (!user || !fitnessData) return;
+
+    const fetchAIPlan = async () => {
+      try {
+        setLoadingAI(true);
+        const result = await getAIPlan({
+          calories: mlCalories ?? fitnessData.targetCalories,
+          goal: user.fitnessGoal,
+          bmi: fitnessData.bmi,
+          fitnessLevel: user.fitnessLevel
+        });
+        setAiTextPlan(result || "AI plan will appear here.");
+      } catch {
+        setAiTextPlan("AI plan unavailable right now.");
+      } finally {
+        setLoadingAI(false);
+      }
+    };
+
+    fetchAIPlan();
+  }, [user, fitnessData, mlCalories]);
+
+  /* ================= SAFETY ================= */
   if (!user || !fitnessData) {
     return (
-      <div style={{ 
-        minHeight: '100vh', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center',
-        backgroundColor: '#f9fafb'
+      <div style={{
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
       }}>
-        <div style={{ textAlign: 'center' }}>
-          <h2>Loading your dashboard...</h2>
-          <p>Please wait while we prepare your fitness data.</p>
-        </div>
+        <h2>Loading dashboard...</h2>
       </div>
     );
   }
 
+  /* ================= RULE BASED PLAN ================= */
+  const aiPlan = generatePlan({
+    calories: mlCalories ?? fitnessData.targetCalories,
+    goal: user.fitnessGoal,
+    fitnessLevel: user.fitnessLevel,
+    healthProblems: user.healthProblems || []
+  });
+
   const currentWeek = 1;
   const currentDay = new Date().getDay() || 7;
 
-  // Safely access workout and diet data with fallbacks
-  const todaysWorkout = fitnessData.workoutPlan?.[`week${currentWeek}`]?.[`day${currentDay}`] || {
-    type: 'rest',
-    title: 'Rest Day',
-    description: 'Recovery and light stretching'
-  };
+  const todaysWorkout =
+    fitnessData.workoutPlan?.[`week${currentWeek}`]?.[`day${currentDay}`] || {
+      title: "Rest Day"
+    };
 
-  const thisWeeksDiet = fitnessData.dietPlan?.[`week${currentWeek}`] || {};
-  const todaysDiet = thisWeeksDiet[`day${currentDay}`] || {
-    meals: {
-      breakfast: { name: 'Healthy Breakfast' },
-      lunch: { name: 'Nutritious Lunch' },
-      dinner: { name: 'Balanced Dinner' }
-    }
-  };
+  const todaysDiet =
+    fitnessData.dietPlan?.[`week${currentWeek}`]?.[`day${currentDay}`] || {
+      meals: {
+        breakfast: { name: "Healthy Breakfast" },
+        lunch: { name: "Nutritious Lunch" },
+        dinner: { name: "Balanced Dinner" }
+      }
+    };
 
-  // Calculate BMI position on scale (0-100%)
   const getBMIPosition = (bmi) => {
-    const bmiValue = parseFloat(bmi);
-    if (bmiValue <= 15) return 0;
-    if (bmiValue >= 40) return 100;
-    
-    // Map BMI ranges to percentage positions
-    if (bmiValue < 18.5) {
-      return (bmiValue - 15) / (18.5 - 15) * 18.5;
-    } else if (bmiValue < 25) {
-      return 18.5 + (bmiValue - 18.5) / (25 - 18.5) * (25 - 18.5);
-    } else if (bmiValue < 30) {
-      return 25 + (bmiValue - 25) / (30 - 25) * (30 - 25);
-    } else if (bmiValue < 35) {
-      return 30 + (bmiValue - 30) / (35 - 30) * (35 - 30);
-    } else {
-      return 35 + (bmiValue - 35) / (40 - 35) * (100 - 35);
-    }
+    const v = parseFloat(bmi);
+    if (v <= 15) return 0;
+    if (v >= 40) return 100;
+    return ((v - 15) / 25) * 100;
   };
 
+  /* ================= UI ================= */
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
-      {/* Header */}
-      <header style={{ 
-        background: 'linear-gradient(135deg, var(--fitness-green), var(--energy-orange))',
-        color: 'white',
-        padding: '2rem 0'
+    <div style={{ minHeight: "100vh", backgroundColor: "#f9fafb" }}>
+
+      {/* HEADER */}
+      <header style={{
+        background: "linear-gradient(135deg, #22c55e, #f97316)",
+        color: "white",
+        padding: "2rem 0"
       }}>
-        <div className="container">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
-                Welcome back! 👋
-              </h1>
-              <p style={{ opacity: 0.9 }}>
-                Ready for Week {currentWeek} of your fitness journey?
-              </p>
-            </div>
-            <Link to="/profile" className="btn" style={{ 
-              backgroundColor: 'rgba(255,255,255,0.2)', 
-              color: 'white',
-              textDecoration: 'none'
-            }}>
-              Profile
-            </Link>
+        <div className="container" style={{ display: "flex", justifyContent: "space-between" }}>
+          <div>
+            <h1>Welcome back 👋</h1>
+            <p>Your AI-powered fitness dashboard</p>
           </div>
+          <Link to="/profile" className="btn" style={{ background: "rgba(255,255,255,0.2)", color: "white" }}>
+            Profile
+          </Link>
         </div>
       </header>
 
-      <div className="container" style={{ padding: '2rem 0' }}>
-        {/* Quick Stats */}
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-          gap: '1rem',
-          marginBottom: '2rem'
-        }}>
-          <div className="card" style={{ textAlign: 'center' }}>
-            <h3 style={{ color: 'var(--fitness-green)', fontSize: '2rem' }}>
-              {currentWeek}/10
-            </h3>
-            <p style={{ color: 'var(--text-gray)' }}>Weeks Completed</p>
+      <div className="container" style={{ padding: "2rem 0" }}>
+
+        {/* QUICK STATS */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
+          <div className="card" style={{ textAlign: "center" }}>
+            <h3>{currentWeek}/10</h3>
+            <p>Week</p>
           </div>
-          
-          <div className="card" style={{ textAlign: 'center' }}>
-            <h3 style={{ color: 'var(--energy-orange)', fontSize: '2rem' }}>
-              {fitnessData.targetCalories}
+
+          <div className="card" style={{ textAlign: "center" }}>
+            <h3 style={{ color: "#f97316" }}>
+              {mlCalories ?? fitnessData.targetCalories}
             </h3>
-            <p style={{ color: 'var(--text-gray)' }}>Daily Calories</p>
+            <p>Daily Calories</p>
           </div>
-          
-          <div className="card" style={{ textAlign: 'center' }}>
-            <h3 style={{ color: 'var(--fitness-green)', fontSize: '2rem' }}>
-              {user.fitnessGoal ? user.fitnessGoal.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'General Fitness'}
-            </h3>
-            <p style={{ color: 'var(--text-gray)' }}>Your Goal</p>
+
+          <div className="card" style={{ textAlign: "center" }}>
+            <h3>{user.fitnessGoal?.replace("_", " ").toUpperCase()}</h3>
+            <p>Goal</p>
           </div>
         </div>
 
-        {/* BMI Health Indicator */}
-        <div className="card bmi-card" style={{ marginBottom: '2rem' }}>
-          <h3 style={{ marginBottom: '1rem', color: 'var(--text-dark)' }}>
-            📊 Health Assessment
-          </h3>
-          
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', 
-            gap: '1rem',
-            marginBottom: '1.5rem'
-          }}>
-            <div style={{ textAlign: 'center' }}>
-              <h4 style={{ color: fitnessData.bmiCategory.color, fontSize: '2rem', marginBottom: '0.25rem' }}>
-                {fitnessData.bmi}
-              </h4>
-              <p style={{ color: 'var(--text-gray)', fontSize: '0.875rem' }}>BMI</p>
-            </div>
-            
-            <div style={{ textAlign: 'center' }}>
-              <h4 style={{ color: fitnessData.bmiCategory.color, fontSize: '1.25rem', marginBottom: '0.25rem' }}>
-                {fitnessData.bmiCategory.category}
-              </h4>
-              <p style={{ color: 'var(--text-gray)', fontSize: '0.875rem' }}>Category</p>
-            </div>
-            
-            <div style={{ textAlign: 'center' }}>
-              <h4 style={{ color: fitnessData.bmiCategory.color, fontSize: '1.25rem', marginBottom: '0.25rem' }}>
-                {fitnessData.bmiCategory.risk} Risk
-              </h4>
-              <p style={{ color: 'var(--text-gray)', fontSize: '0.875rem' }}>Health Risk</p>
-            </div>
-          </div>
-
-          {/* BMI Scale */}
-          <div>
-            <h4 style={{ marginBottom: '0.5rem', fontSize: '1rem' }}>BMI Scale</h4>
-            <div className="bmi-scale">
-              <div 
-                className="bmi-indicator"
-                style={{ left: `${getBMIPosition(fitnessData.bmi)}%` }}
-              ></div>
-            </div>
-            <div className="bmi-labels">
-              <span>Underweight<br/>&lt;18.5</span>
-              <span>Normal<br/>18.5-24.9</span>
-              <span>Overweight<br/>25-29.9</span>
-              <span>Obese<br/>30-34.9</span>
-              <span>Extremely Obese<br/>≥35</span>
-            </div>
+        {/* BMI */}
+        <div className="card" style={{ marginTop: "2rem" }}>
+          <h3>📊 BMI Health Indicator</h3>
+          <p style={{ fontSize: "0.9rem", color: "#6b7280" }}>
+            Body Mass Index based health status
+          </p>
+          <p><strong>BMI:</strong> {fitnessData.bmi}</p>
+          <div className="bmi-scale">
+            <div
+              className="bmi-indicator"
+              style={{ left: `${getBMIPosition(fitnessData.bmi)}%` }}
+            />
           </div>
         </div>
 
-        {/* Today's Workout */}
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', 
-          gap: '2rem',
-          marginBottom: '2rem'
-        }}>
+        {/* TODAY */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", marginTop: "2rem" }}>
           <div className="card">
-            <h3 style={{ marginBottom: '1rem', color: 'var(--fitness-green)' }}>
-              🏋️ Today's Workout
-            </h3>
-            {todaysWorkout.type === 'rest' ? (
-              <div>
-                <p style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Rest Day</p>
-                <p style={{ color: 'var(--text-gray)' }}>
-                  Take time to recover and do light stretching
-                </p>
-              </div>
-            ) : (
-              <div>
-                <p style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>
-                  {todaysWorkout.title}
-                </p>
-                <p style={{ color: 'var(--text-gray)', marginBottom: '1rem' }}>
-                  Phase: {todaysWorkout.phase || 'Foundation'}
-                </p>
-                <Link 
-                  to={`/plan/workout/${currentWeek}/${currentDay}`}
-                  className="btn btn-primary"
-                  style={{ textDecoration: 'none' }}
-                >
-                  Start Workout
-                </Link>
-              </div>
-            )}
+            <h3>🏋️ Today Workout</h3>
+            <p>{todaysWorkout.title}</p>
           </div>
 
           <div className="card">
-            <h3 style={{ marginBottom: '1rem', color: 'var(--energy-orange)' }}>
-              🍽️ Today's Meals
-            </h3>
-            <div>
-              <div style={{ marginBottom: '1rem' }}>
-                <p><strong>Breakfast:</strong> {todaysDiet.meals.breakfast.name}</p>
-                <p><strong>Lunch:</strong> {todaysDiet.meals.lunch.name}</p>
-                <p><strong>Dinner:</strong> {todaysDiet.meals.dinner.name}</p>
-              </div>
-              <Link 
-                to={`/plan/diet/${currentWeek}`}
-                className="btn btn-secondary"
-                style={{ textDecoration: 'none' }}
-              >
-                View Full Diet Plan
-              </Link>
-            </div>
+            <h3>🍽️ Today Meals</h3>
+            <p>Breakfast: {todaysDiet.meals.breakfast.name}</p>
+            <p>Lunch: {todaysDiet.meals.lunch.name}</p>
+            <p>Dinner: {todaysDiet.meals.dinner.name}</p>
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="card">
-          <h3 style={{ marginBottom: '1.5rem' }}>Quick Actions</h3>
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-            gap: '1rem'
-          }}>
-            <Link 
-              to="/plan/overview" 
-              className="btn btn-primary"
-              style={{ textDecoration: 'none', textAlign: 'center' }}
-            >
-              📊 Plan Overview
-            </Link>
-            <Link 
-              to="/progress" 
-              className="btn btn-secondary"
-              style={{ textDecoration: 'none', textAlign: 'center' }}
-            >
-              📈 View Progress
-            </Link>
-            <Link 
-              to={`/plan/workout/${currentWeek}/1`}
-              className="btn"
-              style={{ 
-                backgroundColor: 'var(--text-gray)', 
-                color: 'white',
-                textDecoration: 'none', 
-                textAlign: 'center' 
-              }}
-            >
-              🗓️ Week Schedule
-            </Link>
+        {/* RULE BASED AI */}
+        <div
+  className="card"
+  style={{
+    marginTop: "2rem",
+    border: "1.5px solid #bbf7d0",
+    backgroundColor: "#f0fdf4"
+  }}
+>
+          <h3>🤖 AI Personalized Plan</h3>
+
+          <h4>🥗 Diet</h4>
+          <ul>
+            {aiPlan.dietRecommendations.map((d, i) => <li key={i}>{d}</li>)}
+          </ul>
+
+          <h4>🏋️ Workout</h4>
+          <ul>
+            {aiPlan.workoutRecommendations.map((w, i) => <li key={i}>{w}</li>)}
+          </ul>
+        </div>
+
+        {/* GEMINI AI */}
+        <div
+  className="card"
+  style={{
+    marginTop: "2rem",
+    border: "1.5px solid #bbf7d0",
+    backgroundColor: "#f0fdf4"
+  }}
+>
+          <h3>✨ Gemini AI – Smart Recommendations</h3>
+          <p style={{ fontSize: "0.9rem", color: "#6b7280" }}>
+            Generated using your calories, BMI and fitness goal
+          </p>
+
+          {loadingAI ? (
+            <p style={{ fontStyle: "italic", color: "#888" }}>
+              🤖 Generating your personalized AI plan...
+            </p>
+          ) : (
+            <div style={{ lineHeight: "1.8", color: "#374151" }}>
+              {aiTextPlan
+                .split("\n")
+                .filter(line => line.trim() !== "")
+                .map((line, idx) => (
+                  <p key={idx} style={{ marginBottom: "0.6rem" }}>
+                    {line}
+                  </p>
+                ))}
+            </div>
+          )}
+        </div>
+
+        {/* CHARTS */}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gap: "1.5rem",
+          marginTop: "2rem"
+        }}>
+          <CaloriesChart calories={mlCalories ?? fitnessData.targetCalories} />
+          <BMIChart bmi={fitnessData.bmi} />
+          <ProgressChart />
+        </div>
+
+        {/* QUICK ACTIONS */}
+        <div className="card" style={{ marginTop: "2rem" }}>
+          <h3>⚡ Quick Actions</h3>
+          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+            <Link to="/plan/overview" className="btn btn-primary">📋 Plan Overview</Link>
+            <Link to="/progress" className="btn btn-secondary">📈 Progress</Link>
           </div>
         </div>
+
       </div>
     </div>
   );

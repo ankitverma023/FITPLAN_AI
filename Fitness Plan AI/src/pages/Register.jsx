@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
-
+import { predictCalories } from "../services/mlApi";
 const Register = () => {
   const navigate = useNavigate();
   const { registerUser } = useUser();
@@ -63,11 +63,40 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    registerUser(formData);
-    navigate('/dashboard');
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  alert("Button clicked");
+
+  const mlPayload = {
+    age: Number(formData.age),
+    gender: formData.sex === "male" ? 1 : 0,
+    height_cm: Number(formData.height),
+    weight_kg: Number(formData.weight),
+    activity_level:
+      formData.fitnessLevel === "beginner"
+        ? 1
+        : formData.fitnessLevel === "intermediate"
+        ? 2
+        : 3,
+    goal:
+      formData.fitnessGoal === "weight_loss"
+        ? 1
+        : formData.fitnessGoal === "muscle_gain"
+        ? 2
+        : 3
   };
+
+  const predictedCalories = await predictCalories(mlPayload);
+
+  console.log("🔥 ML Predicted Calories:", predictedCalories);
+
+  registerUser({
+    ...formData,
+    predictedCalories
+  });
+
+  navigate("/dashboard");
+};
 
   const nextStep = () => {
     if (currentStep < totalSteps) {

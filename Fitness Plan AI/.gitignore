@@ -21,14 +21,13 @@ __pycache__/
 *.pyc
 
 # =====================
-# ML / Backend (VERY IMPORTANT)
+# ML models (IMPORTANT)
 # =====================
+model.pkl
 ml/model.pkl
-ml/.env
-ml/__pycache__/
-ml/data/
 
 # =====================
 # OS files
 # =====================
 .DS_Store
+

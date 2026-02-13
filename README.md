@@ -108,12 +108,6 @@ User Input
 - Node.js
 
 ---
-
-## 📂 Project Structure
-# FitPlan AI
-
-A rule-based fitness and diet planner with an AI-like user experience. Get personalized 10-week fitness and nutrition plans without any signup required.
-
 ## ✨ Features
 
 - **Personalized Plans**: Customized 10-week fitness and diet plans based on your goals, fitness level, and health conditions
@@ -154,23 +148,31 @@ A rule-based fitness and diet planner with an AI-like user experience. Get perso
 - Node.js (version 16 or higher)
 - npm or yarn package manager
 
-### Installation
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd "Fitness Plan AI"
-```
+---
 
-2. Install dependencies:
+## ⚙️ Installation & Setup
+
+### 1️⃣ Clone Repository
+
 ```bash
+git clone https://github.com/ankitverma023/FITPLAN_AI.git
+cd FITPLAN_AI
+
+2.cd Backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+uvicorn api:app --reload
+
+
+3. 3️⃣ Frontend Setup
+Open a new terminal:
+Bash
+
+cd Frontend
 npm install
-```
-
-3. Start the development server:
-```bash
 npm run dev
-```
 
 4. Open your browser and navigate to `http://localhost:5173`
 
@@ -215,25 +217,6 @@ Fitness Plan AI/
 └── vite.config.js          # Vite configuration
 ```
 
-## 🛠️ Technology Stack
-
-- **Frontend**: React 18 with Vite
-- **Routing**: React Router DOM
-- **Styling**: CSS with custom properties
-- **Build Tool**: Vite
-- **Package Manager**: npm
-
-## 📱 Pages Overview
-
-- **Landing**: Welcome page with feature highlights
-- **Register**: Multi-step user onboarding form
-- **Dashboard**: Main hub with quick access to plans and progress
-- **Plan Overview**: Complete 10-week plan summary
-- **Workout Day**: Detailed daily workout instructions
-- **Diet Week**: Weekly meal plans and nutrition info
-- **Progress**: Track your fitness journey
-- **Profile**: Manage your personal information
-
 ## 🎨 Design System
 
 The app uses a modern design system with:
@@ -251,9 +234,6 @@ The app uses a modern design system with:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
-
-This project is licensed under the ISC License.
 
 ## 🔮 Future Enhancements
 

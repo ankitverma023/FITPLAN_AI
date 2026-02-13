@@ -1,3 +1,115 @@
+# 🏋️‍♂️ FitPlan AI
+
+AI-Powered Personalized Fitness & Nutrition Planning System  
+
+A hybrid rule-based + Machine Learning fitness planner that generates customized 10-week workout and diet plans based on user goals, fitness level, and health conditions.
+
+Developed as part of a collaborative project and enhanced for portfolio demonstration.
+
+---
+
+## 🚀 Key Highlights
+
+- 🔥 AI-based fitness goal classification
+- 📊 Dynamic calorie estimation engine
+- 🧠 Rule-based + ML hybrid planning system
+- 📅 Structured 10-week progressive workout system
+- 🥗 Macro-balanced personalized meal plans
+- ⚡ FastAPI backend integration
+- 🌐 React + Vite frontend
+- 📱 Fully responsive modern UI
+- 🔐 No signup required (instant planning)
+
+---
+
+## 🤖 AI & Backend Integration
+
+- Machine Learning model built using **Random Forest Classifier**
+- Model serialization using `joblib (.pkl)`
+- FastAPI-based REST API backend
+- Frontend-backend communication via HTTP endpoints
+- Modular backend architecture for easy deployment
+
+---
+
+## 📊 Intelligence Layer
+
+- Goal classification system
+- Activity level intensity mapping
+- Progressive overload logic
+- Calorie calculation engine
+- Hybrid rule + ML decision pipeline
+
+Flow:
+
+User Input  
+→ API Request  
+→ ML Model Prediction  
+→ Rule Engine Processing  
+→ Personalized Plan Generation  
+→ Frontend Display  
+
+---
+
+## 🎯 Fitness Goals Supported
+
+- Weight Loss
+- Muscle Gain
+- Fat Loss & Toning
+- General Fitness
+- Endurance Improvement
+
+---
+
+## 🏃‍♂️ Workout System
+
+- Strength training
+- HIIT (High-Intensity Interval Training)
+- Cardio workouts
+- Compound movements
+- Isolation exercises
+- Flexibility & mobility training
+- Weekly progressive intensity scaling
+
+---
+
+## 🍽️ Nutrition System
+
+- Goal-based calorie estimation
+- BMI-aware logic
+- Multiple cuisine support
+- Dietary restriction handling
+- Weekly structured meal plans
+- Macro-balanced nutrition guidance
+
+---
+
+## 🛠️ Technology Stack
+
+### Frontend
+- React 18
+- Vite
+- React Router DOM
+- CSS (Custom Design System)
+- Context API (State Management)
+
+### Backend
+- Python
+- FastAPI
+- Uvicorn
+- scikit-learn
+- Pandas
+- Joblib
+
+### Tools
+- VS Code
+- Git & GitHub
+- Jupyter Notebook
+- Node.js
+
+---
+
+## 📂 Project Structure
 # FitPlan AI
 
 A rule-based fitness and diet planner with an AI-like user experience. Get personalized 10-week fitness and nutrition plans without any signup required.
